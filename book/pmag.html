@@ -205,6 +205,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>我們將展示一個包含『逐字翻譯、英文單字測驗、字典管理、帳號登入、多國語言』等幾個單獨網頁的系統，而這些系統透過上述模式進行資料分享與溝通，並與伺服端結合的範例，展示這種『多網頁可離線的合作模式』的設計原理。</p>
 <h1 id="程式人文集">程式人文集</h1>
 <h2 id="web-可離線應用-1----逐字英翻中系統">Web 可離線應用 1 -- 逐字英翻中系統</h2>
+<p>本系統已經上傳到 github 上，您可以點選下列連結試用一下這個「英翻中系統」系統，然後在開始閱讀本文：</p>
+<ul>
+<li><a href="http://programmermagazine.github.io/201501/code/mt.html" class="uri">http://programmermagazine.github.io/201501/code/mt.html</a></li>
+</ul>
 <p>為了要說明如何用 HTML5/CSS/JavaScript 建構出可單頁獨立運作，又可透過 localstorage 記住使用者資訊的網頁應用，我們建立了一個「逐字英翻中系統」，讓使用者可以透過 localstorage 儲存使用者紀錄的一些資訊。</p>
 <p>首先我們在 spa.js (Single Page Application 的簡寫) 當中創建了一個稱為 DB 的物件，該物件可以用來協助「載入或儲存」資訊到 localstorage 當中，如此就可以用 load(), save() 函數記住這些資訊，必須注意的是 localstorage 當中只能儲存字串資訊，因此我們必須用 JSON.stringify() 等函數將 JSON 物件轉換成字串後才能儲存，而在取出後再用 JSON.parse() 將字串轉回 JSON 物件。</p>
 <p>檔案: spa.js</p>
