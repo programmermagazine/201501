@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../css/pmag.css" type="text/css" />
+</head>
+<body>
+<div id="header_wrap">
+   <h1><a href="https://www.facebook.com/groups/programmerMagazine">程式人雜誌</a> <sub> --  <a href="http://programmermagazine.github.io/201501/htm/home.html">2015 年 1 月號</a> (開放公益出版品)</sub></h1>
+</div>
+<div id="content">
+<div id="TOC">
+<ul>
+<li><a href="#網站設計的一種新模式---基於-localstorage-與-websocket-的可離線設計方法">網站設計的一種新模式 - 基於 localstorage 與 websocket 的可離線設計方法</a></li>
+</ul>
+</div>
+<h2 id="網站設計的一種新模式---基於-localstorage-與-websocket-的可離線設計方法">網站設計的一種新模式 - 基於 localstorage 與 websocket 的可離線設計方法</h2>
+<p>雖然最近的 Backbone.js , Angular.js, React.js 等框架似乎都提供了單頁式應用 （Single Page Application) 更好的發展工具，但是網頁做成單頁式的畢竟還是會喪失原本的優勢之一，也就是每頁分開的獨立性較高，分工較容易的的特點。</p>
+<p>舉例而言、假如我想作一個翻譯系統，那麼除了『翻譯功能』之外，還會有字典管理、帳號管理、登入模組等功能，如果做成單頁應用，那麼這些功能就必須整合在一頁當中，雖然可以分開放在不同的javascript模組，但是會納入到一個系統當中，而不能個別獨立的運作了。</p>
+<p>於是我開始思考，有沒有可能做成很多個獨立的頁面，但是這些頁面合起來還是可以形成一個完整的系統呢？</p>
+<p>在看到了localstorage與 websocket 這些HTML5的新技術之後，我開始覺得這樣的設計應該是可行的。</p>
+<p>舉例而言，當我們設計了一個網頁專門作『翻譯功能』的時候，我們可能會需要用到字典，於是我們可以用一個預設的字典放在程式裡，但是讓使用者可以透過 localstorage 取得『字典管理』頁面所記錄下來的『其他字典』，這樣就可以讓『翻譯功能』與『字典管理』共用字典了。</p>
+<p>然後、當網頁偵測到可以連上伺服器時，就可以利用websocket的模組將資料傳回伺服器儲存，但是在連不上伺服器時就採取離線的方式運作，這樣就可以讓一個網頁再沒有伺服器時也能運作，但是在有伺服器時就可以取得伺服端的資料並於修改後存回伺服器。</p>
+<p>在本期雜誌的後半部與下期的雜誌中，我們將會用實際的範例，說明這種『多網頁可離線的合作模式』是如何進行的，讓大家能透過程式碼來理解這種模式的實際運作方式。</p>
+<p>我們將展示一個包含『逐字翻譯、英文單字測驗、字典管理、帳號登入、多國語言』等幾個單獨網頁的系統，而這些系統透過上述模式進行資料分享與溝通，並與伺服端結合的範例，展示這種『多網頁可離線的合作模式』的設計原理。</p>
+</div>
+<div id="footer">
+<a href="https://www.facebook.com/groups/programmerMagazine/">程式人雜誌</a> ，採用 <a href="http://creativecommons.org/licenses/by-sa/3.0/tw/ ">創作共用：姓名標示、相同方式分享</a> 授權，歡迎加入 <a href="https://www.facebook.com/groups/programmerMagazine/">雜誌社團</a>
+</div>
+</body>
+</html>

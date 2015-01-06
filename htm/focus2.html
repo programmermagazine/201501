@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../css/pmag.css" type="text/css" />
+</head>
+<body>
+<div id="header_wrap">
+   <h1><a href="https://www.facebook.com/groups/programmerMagazine">程式人雜誌</a> <sub> --  <a href="http://programmermagazine.github.io/201501/htm/home.html">2015 年 1 月號</a> (開放公益出版品)</sub></h1>
+</div>
+<div id="content">
+<div id="TOC">
+<ul>
+<li><a href="#html5-與前端技術的新進展">HTML5 與前端技術的新進展</a></li>
+</ul>
+</div>
+<h2 id="html5-與前端技術的新進展">HTML5 與前端技術的新進展</h2>
+<p>HTML5 是網頁技術上的一個重要里程碑，雖然其 W3C 的標準直到2014年才進入正式版的recommandation模式，但是在各家的瀏覽器當中，卻幾乎都已經相當完整的支援了HTML5的大部分功能。</p>
+<p>HTML5 裡面有很多受到注目的功能，這些功能很可能改變整個web的設計與使用型態，其中較為人所知的部份如下：</p>
+<ul>
+<li>2D 繪圖的 canvas 功能</li>
+<li>3D 繪圖的 WebGL 功能</li>
+<li>GPS 定位的 geo location 功能</li>
+<li>更多的語意標記 (article, ....)</li>
+<li>搭配 CSS3 的動畫與更多排版功能</li>
+<li>區域儲存 （localstorage, indexedDB）與離線應用的功能</li>
+<li>雙向網路通訊的 websocket 功能</li>
+<li>可以不阻礙畫面顯示的 webworker 功能</li>
+</ul>
+<p>其中有關 2D、3D、GPS等功能比較一目了然，可以想見會造成哪些影響。這些功能讓遊戲動畫與地理資訊類的程式可以搬到HTML5/CSS3/Javascript 的平台上呈現使用，不需要再依賴flash或其他外掛了。</p>
+<p>至於語意標記則是W3C在XML無法普及後企圖讓網路稍微具有點語意功能的方法，而CSS3則讓網頁排版可以更加動態與活潑，但是直到最近我才發現，其實最後三項 (區域儲存、websocket、webworker) 的影響力或許會比前面那些更大也說不定。</p>
+<p>關注web與行動技術的朋友一定都會注意到，1993年網路大爆發之後，web技術大致在javascript提出之後就底定了，中間經過flash動畫的銜接，但web整體的技術並沒有很明顯的改變。反而是2007年開始智慧型手機上網後導致APP興起，於是技術又回到各家廠商主導的平台導向世界。</p>
+<p>但是、HTML5 提出了區域儲存的功能之後，就為離線應用鋪好了一條路，這條路有可能直達APP的地盤，讓網頁也能做出類似APP的應用，於我們就有可能用HTML5做出跨平台的APP，而且不需要依靠像Titanium或PhoneGap 這樣的平台。</p>
+<p>當然、基於安全性的顧慮，有些系統功能還是無法用HTML5做出來的，例如存取硬碟、呼叫系統函數等等，但是對於那些不需要存取系統函數的程式而言，可以將資料存在localstorage或indexedDB當中，然後用websocket的方式回傳到伺服端，這種方法可以部份的彌補原本網頁程式難以 APP化的問題。</p>
+<p>最近、像是 Backbone.js , Angular.js, React.js 等著重在『單頁應用』的框架開始受到大量的關注，我想也是與 HTML5 技術有關的。但是、即使不做成單頁應用，而是做成多頁應用，然後再利用『區域儲存』的localstorage或indexedDB技術達成跨網頁間的資料共用，其實也可以做出類似 APP的效果，我們將在這兩期的『程式人雜誌』當中探討此一議題。</p>
+</div>
+<div id="footer">
+<a href="https://www.facebook.com/groups/programmerMagazine/">程式人雜誌</a> ，採用 <a href="http://creativecommons.org/licenses/by-sa/3.0/tw/ ">創作共用：姓名標示、相同方式分享</a> 授權，歡迎加入 <a href="https://www.facebook.com/groups/programmerMagazine/">雜誌社團</a>
+</div>
+</body>
+</html>

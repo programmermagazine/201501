@@ -1,0 +1,83 @@
+<html>
+<head>
+<meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="elearn.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="navbar">
+    </nav>
+    <div id="panelEdit" class="container panel lead">
+      <div class="page-header"><h1 data-mt="Dictionary Editing"></h1></div>
+        <form name="formEdit" action="javascript:pass()">
+          <div class="row">
+            <div class="col-md-3">
+              <select id="fileSelect" class="form-control">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="col-md-1">
+     	      <input type="file" id="filebox" name="filebox" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText=""/>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary" type="button" data-mt="Save"></button>
+            </div>
+          </div>
+          <br/>
+          <textarea id="editbox" class="form-control" rows="15"></textarea>
+        </form>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-filestyle.min.js"></script>
+    <script src="navmenu.js"></script>
+    <script src="spa.js"></script>
+    <script src="dict.js"></script>
+<script>
+var editbox = document.getElementById("editbox");
+var filebox = document.getElementById("filebox");
+
+function initDict() {
+  for (var dname in dictMap) {
+    $('#fileSelect').append('<option value="'+dname+'">'+dname+'</option>');
+  }
+}
+
+function loadDict() {
+   editbox.value = editbox.value.trim().replace(/,[ ]*/g, "\n").replace(/\r\t/g, "");
+  qa = editbox.value.split("\n");
+}
+
+function fileboxChange(evt) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    editbox.value = reader.result;
+    loadDict();
+  };
+  
+  filename = evt.target.files[0].name;
+  reader.readAsText(evt.target.files[0]);
+}
+
+function fileSelectChange(evt) {
+  if (dictMap[fileSelect.value]=== undefined) 
+     editbox.value = "";
+  else
+    editbox.value = dictMap[fileSelect.value];
+  loadDict();
+}
+
+function switchDict(name) {
+  editbox.value = dictMap[name];
+  loadDict();
+}
+
+filebox.addEventListener('change', fileboxChange, false);    
+fileSelect.addEventListener('change', fileSelectChange, false);
+
+$(initDict);
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!-- firefox 似乎不支援 ruby tag : http://www.w3schools.com/tags/tag_ruby.asp -->
+<html>
+<head>
+<meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="elearn.css" rel="stylesheet">
+</head>
+<body onload="load()">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="navbar">
+    </nav>
+    <div id="panelMT" class="container panel">
+      <p class="lead">
+        <form name="formMT" class="lead">
+          <div class="row" style="height:300px">
+            <div class="col-md-6">
+              <div class="page-header">
+                <span data-mt="English">原文</span>
+                <input type="text" id="query" equired autofocus data-mt="Query" placeholder="" size="12"/> 
+                <button class="btn btn-primary" type="button" data-mt="Query">查詢</button>
+                <button class="btn btn-primary" type="button" data-mt="Translation" onclick="doMT()"  style="float:right">翻譯</button>
+              </div>
+              <textarea id="ebox" class="form-control" style="height:100%">
+The snow glows white on the mountain tonight.
+Not a footprint to be seen.
+A kingdom of isolation, and it looks like I'm the Queen.
+The wind is howling like this swirling storm inside.
+Couldn't keep it in; Heaven knows I've tried.
+
+Don't let them in, don't let them see.
+Be the good girl you always have to be.
+Conceal, don't feel, don't let them know.
+Well now they know.
+
+Let it go, let it go.
+Can't hold it back any more.
+Let it go, let it go.
+Turn away and slam the door.
+I don't care.
+What they're going to say.
+Let the storm rage on, the cold never bothered me anyway.
+	      </textarea>
+            </div>
+            <div class="col-md-6">
+              <div class="page-header">
+                <span data-mt="Translation"></span>
+                <input type="text" id="queryResult" equired autofocus data-mt="queryResult" placeholder="" size="15"/>
+                <button class="btn btn-primary" type="button" data-mt="Save">儲存</button>
+                <button class="btn btn-success" type="button" data-mt="Forget" onclick="forget()" style="float:right">忘記</button>
+              </div>
+              <div id="cbox" style="width:100%; height:100%; border:1px dotted #888; overflow:auto;" class="form-control"></div>
+            </div>
+            <div></div>
+          </div> <!-- row -->
+        </form>
+      </p>
+    </div>
+<script>
+var ebox, cbox, dict;
+
+function load() {
+  ebox = document.getElementById("ebox");
+  cbox = document.getElementById("cbox");
+  dict = e2cTV;
+  var dbKnowWords = DB.load('knowWords');
+  if (dbKnowWords === undefined)
+    knowWords = {};
+  else
+    knowWords = dbKnowWords;
+}
+
+function forget() {
+  DB.forget('knowWords');
+  knowWords = {};
+}
+
+function normalize(e) {
+  return e.replace("'", '_').toLowerCase();
+}
+
+function mt(str) {
+  var re = /([\w']+)/gi;  
+  var toStr = "";
+  var si = 0;
+  while (m = re.exec(str)) {
+    var eword = m[1], elower=eword.toLowerCase();
+    var cword = dict[eword.toLowerCase()];
+    toStr += str.substring(si, re.lastIndex-eword.length);
+    if (cword === undefined || knowWords[elower] !== undefined) // 已經認識的字詞就不需要再翻譯了
+      cword = "";
+    toStr += '<ruby class="'+normalize(eword)+'"><rb>'+eword+'</rb><rt>'+cword+'</rt></ruby>';
+    si = re.lastIndex;
+  }
+  return toStr;
+}
+
+function doMT() {
+  var cstr = mt(ebox.value);
+  cbox.innerHTML = cstr.replace(/\n/g, "<BR/>");
+  $('ruby').click(function() {
+    var e = $(this).find('rb').text().toLowerCase();
+    var c = $(this).find('rt').text();
+    knowWords[e] = c;
+    $('#query').val(e);
+    $('#queryResult').val(e+'='+c);
+    $('.'+normalize(e)).find('rt').hide(); // 將使用者點掉的字詞之翻譯隱藏起來。
+  });
+}
+
+window.onbeforeunload = function(){
+  DB.save('knowWords', knowWords);
+};
+</script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="e2c.js"></script>
+    <script src="spa.js"></script>
+    <script src="dict.js"></script>
+    <script src="navmenu.js"></script>
+</body>
+</html>
+

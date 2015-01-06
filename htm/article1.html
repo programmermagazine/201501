@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="../css/pmag.css" type="text/css" />
+</head>
+<body>
+<div id="header_wrap">
+   <h1><a href="https://www.facebook.com/groups/programmerMagazine">程式人雜誌</a> <sub> --  <a href="http://programmermagazine.github.io/201501/htm/home.html">2015 年 1 月號</a> (開放公益出版品)</sub></h1>
+</div>
+<div id="content">
+<div id="TOC">
+<ul>
+<li><a href="#web-可離線應用-1----逐字英翻中系統">Web 可離線應用 1 -- 逐字英翻中系統</a></li>
+</ul>
+</div>
+<h2 id="web-可離線應用-1----逐字英翻中系統">Web 可離線應用 1 -- 逐字英翻中系統</h2>
+<p>為了要說明如何用 HTML5/CSS/JavaScript 建構出可單頁獨立運作，又可透過 localstorage 記住使用者資訊的網頁應用，我們建立了一個「逐字英翻中系統」，讓使用者可以透過 localstorage 儲存使用者紀錄的一些資訊。</p>
+<p>首先我們在 spa.js (Single Page Application 的簡寫) 當中創建了一個稱為 DB 的物件，該物件可以用來協助「載入或儲存」資訊到 localstorage 當中，如此就可以用 load(), save() 函數記住這些資訊，必須注意的是 localstorage 當中只能儲存字串資訊，因此我們必須用 JSON.stringify() 等函數將 JSON 物件轉換成字串後才能儲存，而在取出後再用 JSON.parse() 將字串轉回 JSON 物件。</p>
+<p>檔案: spa.js</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">...
+<span class="kw">var</span> DB = {};
+
+<span class="ot">DB</span>.<span class="fu">forget</span> = <span class="kw">function</span> <span class="fu">DB_forget</span>(name) {
+  <span class="ot">window</span>.<span class="ot">localStorage</span>.<span class="fu">removeItem</span>(name);
+}
+
+<span class="ot">DB</span>.<span class="fu">load</span> = <span class="kw">function</span> <span class="fu">DB_load</span>(name) {
+   <span class="kw">if</span> (<span class="ot">window</span>.<span class="fu">localStorage</span>[name] !== <span class="kw">undefined</span>) 
+     <span class="kw">return</span> <span class="ot">JSON</span>.<span class="fu">parse</span>(<span class="ot">window</span>.<span class="fu">localStorage</span>[name]);
+   <span class="kw">else</span>
+     <span class="kw">return</span> <span class="kw">undefined</span>;
+}
+
+<span class="ot">DB</span>.<span class="fu">save</span> = <span class="kw">function</span> <span class="fu">DB_save</span>(name, obj) {
+  <span class="ot">window</span>.<span class="fu">localStorage</span>[name] = <span class="ot">JSON</span>.<span class="fu">stringify</span>(obj);
+}
+...</code></pre>
+<p>然後、我們撰寫了 mt.html 這個網頁程式，以下是該網頁的一個執行畫面：</p>
+<div class="figure">
+<img src="../img/mt.jpg" alt="圖、逐字英翻中系統" /><p class="caption">圖、逐字英翻中系統</p>
+</div>
+<p>該網頁的完整原始碼如下所示：</p>
+<p>檔案：mt.html</p>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="co">&lt;!-- firefox 似乎不支援 ruby tag : http://www.w3schools.com/tags/tag_ruby.asp --&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+<span class="kw">&lt;meta</span><span class="ot"> charset=</span><span class="st">&quot;utf-8&quot;</span> <span class="kw">/&gt;</span>
+  <span class="kw">&lt;link</span><span class="ot"> rel=</span><span class="st">&quot;icon&quot;</span><span class="ot"> href=</span><span class="st">&quot;favicon.ico&quot;</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;link</span><span class="ot"> href=</span><span class="st">&quot;css/bootstrap.min.css&quot;</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;link</span><span class="ot"> href=</span><span class="st">&quot;elearn.css&quot;</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body</span><span class="ot"> onload=</span><span class="st">&quot;load()&quot;</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;nav</span><span class="ot"> class=</span><span class="st">&quot;navbar navbar-inverse navbar-fixed-top&quot;</span><span class="ot"> role=</span><span class="st">&quot;navigation&quot;</span><span class="ot"> id=</span><span class="st">&quot;navbar&quot;</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;/nav&gt;</span>
+    <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;panelMT&quot;</span><span class="ot"> class=</span><span class="st">&quot;container panel&quot;</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;p</span><span class="ot"> class=</span><span class="st">&quot;lead&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;form</span><span class="ot"> name=</span><span class="st">&quot;formMT&quot;</span><span class="ot"> class=</span><span class="st">&quot;lead&quot;</span><span class="kw">&gt;</span>
+          <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;row&quot;</span><span class="ot"> style=</span><span class="st">&quot;height:300px&quot;</span><span class="kw">&gt;</span>
+            <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;col-md-6&quot;</span><span class="kw">&gt;</span>
+              <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;page-header&quot;</span><span class="kw">&gt;</span>
+                <span class="kw">&lt;span</span><span class="ot"> data-mt=</span><span class="st">&quot;English&quot;</span><span class="kw">&gt;</span>原文<span class="kw">&lt;/span&gt;</span>
+                <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">&quot;text&quot;</span><span class="ot"> id=</span><span class="st">&quot;query&quot;</span><span class="ot"> equired autofocus data-mt=</span><span class="st">&quot;Query&quot;</span><span class="ot"> placeholder=</span><span class="st">&quot;&quot;</span><span class="ot"> size=</span><span class="st">&quot;12&quot;</span><span class="kw">/&gt;</span> 
+                <span class="kw">&lt;button</span><span class="ot"> class=</span><span class="st">&quot;btn btn-primary&quot;</span><span class="ot"> type=</span><span class="st">&quot;button&quot;</span><span class="ot"> data-mt=</span><span class="st">&quot;Query&quot;</span><span class="kw">&gt;</span>查詢<span class="kw">&lt;/button&gt;</span>
+                <span class="kw">&lt;button</span><span class="ot"> class=</span><span class="st">&quot;btn btn-primary&quot;</span><span class="ot"> type=</span><span class="st">&quot;button&quot;</span><span class="ot"> data-mt=</span><span class="st">&quot;Translation&quot;</span><span class="ot"> onclick=</span><span class="st">&quot;doMT()&quot;</span><span class="ot">  style=</span><span class="st">&quot;float:right&quot;</span><span class="kw">&gt;</span>翻譯<span class="kw">&lt;/button&gt;</span>
+              <span class="kw">&lt;/div&gt;</span>
+              <span class="kw">&lt;textarea</span><span class="ot"> id=</span><span class="st">&quot;ebox&quot;</span><span class="ot"> class=</span><span class="st">&quot;form-control&quot;</span><span class="ot"> style=</span><span class="st">&quot;height:100%&quot;</span><span class="kw">&gt;</span>
+The snow glows white on the mountain tonight.
+Not a footprint to be seen.
+A kingdom of isolation, and it looks like I&#39;m the Queen.
+The wind is howling like this swirling storm inside.
+Couldn&#39;t keep it in; Heaven knows I&#39;ve tried.
+
+Don&#39;t let them in, don&#39;t let them see.
+Be the good girl you always have to be.
+Conceal, don&#39;t feel, don&#39;t let them know.
+Well now they know.
+
+Let it go, let it go.
+Can&#39;t hold it back any more.
+Let it go, let it go.
+Turn away and slam the door.
+I don&#39;t care.
+What they&#39;re going to say.
+Let the storm rage on, the cold never bothered me anyway.
+          <span class="kw">&lt;/textarea&gt;</span>
+            <span class="kw">&lt;/div&gt;</span>
+            <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;col-md-6&quot;</span><span class="kw">&gt;</span>
+              <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;page-header&quot;</span><span class="kw">&gt;</span>
+                <span class="kw">&lt;span</span><span class="ot"> data-mt=</span><span class="st">&quot;Translation&quot;</span><span class="kw">&gt;&lt;/span&gt;</span>
+                <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">&quot;text&quot;</span><span class="ot"> id=</span><span class="st">&quot;queryResult&quot;</span><span class="ot"> equired autofocus data-mt=</span><span class="st">&quot;queryResult&quot;</span><span class="ot"> placeholder=</span><span class="st">&quot;&quot;</span><span class="ot"> size=</span><span class="st">&quot;15&quot;</span><span class="kw">/&gt;</span>
+                <span class="kw">&lt;button</span><span class="ot"> class=</span><span class="st">&quot;btn btn-primary&quot;</span><span class="ot"> type=</span><span class="st">&quot;button&quot;</span><span class="ot"> data-mt=</span><span class="st">&quot;Save&quot;</span><span class="kw">&gt;</span>儲存<span class="kw">&lt;/button&gt;</span>
+                <span class="kw">&lt;button</span><span class="ot"> class=</span><span class="st">&quot;btn btn-success&quot;</span><span class="ot"> type=</span><span class="st">&quot;button&quot;</span><span class="ot"> data-mt=</span><span class="st">&quot;Forget&quot;</span><span class="ot"> onclick=</span><span class="st">&quot;forget()&quot;</span><span class="ot"> style=</span><span class="st">&quot;float:right&quot;</span><span class="kw">&gt;</span>忘記<span class="kw">&lt;/button&gt;</span>
+              <span class="kw">&lt;/div&gt;</span>
+              <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;cbox&quot;</span><span class="ot"> style=</span><span class="st">&quot;width:100%; height:100%; border:1px dotted #888; overflow:auto;&quot;</span><span class="ot"> class=</span><span class="st">&quot;form-control&quot;</span><span class="kw">&gt;&lt;/div&gt;</span>
+            <span class="kw">&lt;/div&gt;</span>
+            <span class="kw">&lt;div&gt;&lt;/div&gt;</span>
+          <span class="kw">&lt;/div&gt;</span> <span class="co">&lt;!-- row --&gt;</span>
+        <span class="kw">&lt;/form&gt;</span>
+      <span class="kw">&lt;/p&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;script&gt;</span>
+<span class="kw">var</span> ebox, cbox, dict;
+
+<span class="kw">function</span> <span class="fu">load</span>() {
+  ebox = <span class="ot">document</span>.<span class="fu">getElementById</span>(<span class="st">&quot;ebox&quot;</span>);
+  cbox = <span class="ot">document</span>.<span class="fu">getElementById</span>(<span class="st">&quot;cbox&quot;</span>);
+  dict = e2cTV;
+  <span class="kw">var</span> dbKnowWords = <span class="ot">DB</span>.<span class="fu">load</span>(<span class="st">&#39;knowWords&#39;</span>);
+  <span class="kw">if</span> (dbKnowWords === <span class="kw">undefined</span>)
+    knowWords = {};
+  <span class="kw">else</span>
+    knowWords = dbKnowWords;
+}
+
+<span class="kw">function</span> <span class="fu">forget</span>() {
+  <span class="ot">DB</span>.<span class="fu">forget</span>(<span class="st">&#39;knowWords&#39;</span>);
+  knowWords = {};
+}
+
+<span class="kw">function</span> <span class="fu">normalize</span>(e) {
+  <span class="kw">return</span> <span class="ot">e</span>.<span class="fu">replace</span>(<span class="st">&quot;&#39;&quot;</span>, <span class="st">&#39;_&#39;</span>).<span class="fu">toLowerCase</span>();
+}
+
+<span class="kw">function</span> <span class="fu">mt</span>(str) {
+  <span class="kw">var</span> re = <span class="ot">/</span><span class="fl">(</span><span class="bn">[</span><span class="fl">\w</span><span class="bn">&#39;]</span><span class="fl">+)</span><span class="ot">/gi</span>;  
+  <span class="kw">var</span> toStr = <span class="st">&quot;&quot;</span>;
+  <span class="kw">var</span> si = <span class="dv">0</span>;
+  <span class="kw">while</span> (m = <span class="ot">re</span>.<span class="fu">exec</span>(str)) {
+    <span class="kw">var</span> eword = m[<span class="dv">1</span>], elower=<span class="ot">eword</span>.<span class="fu">toLowerCase</span>();
+    <span class="kw">var</span> cword = dict[<span class="ot">eword</span>.<span class="fu">toLowerCase</span>()];
+    toStr += <span class="ot">str</span>.<span class="fu">substring</span>(si, <span class="ot">re</span>.<span class="fu">lastIndex</span>-<span class="ot">eword</span>.<span class="fu">length</span>);
+    <span class="kw">if</span> (cword === <span class="kw">undefined</span> || knowWords[elower] !== <span class="kw">undefined</span>)
+      cword = <span class="st">&quot;&quot;</span>;
+    toStr += <span class="st">&#39;&lt;ruby class=&quot;&#39;</span>+<span class="fu">normalize</span>(eword)+<span class="st">&#39;&quot;&gt;&lt;rb&gt;&#39;</span>+eword+<span class="st">&#39;&lt;/rb&gt;&lt;rt&gt;&#39;</span>+cword+<span class="st">&#39;&lt;/rt&gt;&lt;/ruby&gt;&#39;</span>;
+    si = <span class="ot">re</span>.<span class="fu">lastIndex</span>;
+  }
+  <span class="kw">return</span> toStr;
+}
+
+<span class="kw">function</span> <span class="fu">doMT</span>() {
+  <span class="kw">var</span> cstr = <span class="fu">mt</span>(<span class="ot">ebox</span>.<span class="fu">value</span>);
+  <span class="ot">cbox</span>.<span class="fu">innerHTML</span> = <span class="ot">cstr</span>.<span class="fu">replace</span>(<span class="ot">/</span><span class="bn">\n</span><span class="ot">/g</span>, <span class="st">&quot;&lt;BR/&gt;&quot;</span>);
+  <span class="fu">$</span>(<span class="st">&#39;ruby&#39;</span>).<span class="fu">click</span>(<span class="kw">function</span>() {
+    <span class="kw">var</span> e = <span class="fu">$</span>(<span class="kw">this</span>).<span class="fu">find</span>(<span class="st">&#39;rb&#39;</span>).<span class="fu">text</span>().<span class="fu">toLowerCase</span>();
+    <span class="kw">var</span> c = <span class="fu">$</span>(<span class="kw">this</span>).<span class="fu">find</span>(<span class="st">&#39;rt&#39;</span>).<span class="fu">text</span>();
+    knowWords[e] = c;
+    <span class="fu">$</span>(<span class="st">&#39;#query&#39;</span>).<span class="fu">val</span>(e);
+    <span class="fu">$</span>(<span class="st">&#39;#queryResult&#39;</span>).<span class="fu">val</span>(e+<span class="st">&#39;=&#39;</span>+c);
+    <span class="fu">$</span>(<span class="st">&#39;.&#39;</span>+<span class="fu">normalize</span>(e)).<span class="fu">find</span>(<span class="st">&#39;rt&#39;</span>).<span class="fu">hide</span>();
+  });
+}
+
+<span class="ot">window</span>.<span class="fu">onbeforeunload</span> = <span class="kw">function</span>(){
+  <span class="ot">DB</span>.<span class="fu">save</span>(<span class="st">&#39;knowWords&#39;</span>, knowWords);
+};
+&lt;<span class="ot">/script&gt;</span>
+<span class="ot">    &lt;script src=&quot;js/jquery</span>.<span class="ot">min</span>.<span class="fu">js</span><span class="st">&quot;&gt;&lt;/script&gt;</span>
+    &lt;script src=<span class="st">&quot;js/bootstrap.min.js&quot;</span>&gt;&lt;<span class="ot">/script&gt;</span>
+<span class="ot">    &lt;script src=&quot;e2c.js&quot;&gt;&lt;/script</span>&gt;
+    &lt;script src=<span class="st">&quot;spa.js&quot;</span>&gt;&lt;<span class="ot">/script&gt;</span>
+<span class="ot">    &lt;script src=&quot;dict.js&quot;&gt;&lt;/script</span>&gt;
+    &lt;script src=<span class="st">&quot;navmenu.js&quot;</span>&gt;&lt;<span class="ot">/script&gt;</span>
+<span class="ot">&lt;/body</span>&gt;
+&lt;<span class="ot">/html&gt;</span></code></pre>
+<p>在上述程式中，我們透過攔截 window.onbeforeunload 事件，在離開網頁之前儲存想記憶的物件。</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">window</span>.<span class="fu">onbeforeunload</span> = <span class="kw">function</span>(){
+  <span class="ot">DB</span>.<span class="fu">save</span>(<span class="st">&#39;knowWords&#39;</span>, knowWords);
+};</code></pre>
+<p>然後在網頁載入時，我們會檢查是否有已經記住的物件，若有則將之載入恢復，這樣就可以透過 localstorage 在網頁中記住較大量的資訊 (記憶量大小各家瀏覽器不同，但大致都在 5MB 以上)，這比傳統的 cookie 大多了，而且 localstorage 不會像 cookie 那樣每次都被放在表頭裡傳回伺服器，因此很適合用來於瀏覽器當中儲存較大量的資訊。</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">load</span>() {
+...
+  <span class="kw">var</span> dbKnowWords = <span class="ot">DB</span>.<span class="fu">load</span>(<span class="st">&#39;knowWords&#39;</span>);
+  <span class="kw">if</span> (dbKnowWords === <span class="kw">undefined</span>)
+    knowWords = {};
+  <span class="kw">else</span>
+    knowWords = dbKnowWords;
+}</code></pre>
+<p>那麼、我們到底用 knowWords 物件來記住甚麼資訊呢？ 關於這點，請讀者仔細觀看下列的 doMT() 程式段落，該函數是用來將 ebox 英文區塊透過 mt() 函數逐字翻譯後，用 ruby 標記顯示中英對照在 ebox 當中，於是讀者才能看到中文在上英文在下的對照翻譯。</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">mt</span>(str) {
+  <span class="kw">var</span> re = <span class="ot">/</span><span class="fl">(</span><span class="bn">[</span><span class="fl">\w</span><span class="bn">&#39;]</span><span class="fl">+)</span><span class="ot">/gi</span>;  
+  <span class="kw">var</span> toStr = <span class="st">&quot;&quot;</span>;
+  <span class="kw">var</span> si = <span class="dv">0</span>;
+  <span class="kw">while</span> (m = <span class="ot">re</span>.<span class="fu">exec</span>(str)) {
+    <span class="kw">var</span> eword = m[<span class="dv">1</span>], elower=<span class="ot">eword</span>.<span class="fu">toLowerCase</span>();
+    <span class="kw">var</span> cword = dict[<span class="ot">eword</span>.<span class="fu">toLowerCase</span>()];
+    toStr += <span class="ot">str</span>.<span class="fu">substring</span>(si, <span class="ot">re</span>.<span class="fu">lastIndex</span>-<span class="ot">eword</span>.<span class="fu">length</span>);
+    <span class="kw">if</span> (cword === <span class="kw">undefined</span> || knowWords[elower] !== <span class="kw">undefined</span>) <span class="co">// 已經認識的字詞就不需要再翻譯了</span>
+      cword = <span class="st">&quot;&quot;</span>;
+    toStr += <span class="st">&#39;&lt;ruby class=&quot;&#39;</span>+<span class="fu">normalize</span>(eword)+<span class="st">&#39;&quot;&gt;&lt;rb&gt;&#39;</span>+eword+<span class="st">&#39;&lt;/rb&gt;&lt;rt&gt;&#39;</span>+cword+<span class="st">&#39;&lt;/rt&gt;&lt;/ruby&gt;&#39;</span>;
+    si = <span class="ot">re</span>.<span class="fu">lastIndex</span>;
+  }
+  <span class="kw">return</span> toStr;
+}
+
+<span class="kw">function</span> <span class="fu">doMT</span>() {
+  <span class="kw">var</span> cstr = <span class="fu">mt</span>(<span class="ot">ebox</span>.<span class="fu">value</span>);
+  <span class="ot">cbox</span>.<span class="fu">innerHTML</span> = <span class="ot">cstr</span>.<span class="fu">replace</span>(<span class="ot">/</span><span class="bn">\n</span><span class="ot">/g</span>, <span class="st">&quot;&lt;BR/&gt;&quot;</span>);
+  <span class="fu">$</span>(<span class="st">&#39;ruby&#39;</span>).<span class="fu">click</span>(<span class="kw">function</span>() {
+    <span class="kw">var</span> e = <span class="fu">$</span>(<span class="kw">this</span>).<span class="fu">find</span>(<span class="st">&#39;rb&#39;</span>).<span class="fu">text</span>().<span class="fu">toLowerCase</span>();
+    <span class="kw">var</span> c = <span class="fu">$</span>(<span class="kw">this</span>).<span class="fu">find</span>(<span class="st">&#39;rt&#39;</span>).<span class="fu">text</span>();
+    knowWords[e] = c;
+    <span class="fu">$</span>(<span class="st">&#39;#query&#39;</span>).<span class="fu">val</span>(e);
+    <span class="fu">$</span>(<span class="st">&#39;#queryResult&#39;</span>).<span class="fu">val</span>(e+<span class="st">&#39;=&#39;</span>+c);
+    <span class="fu">$</span>(<span class="st">&#39;.&#39;</span>+<span class="fu">normalize</span>(e)).<span class="fu">find</span>(<span class="st">&#39;rt&#39;</span>).<span class="fu">hide</span>(); <span class="co">// 將使用者點掉的字詞之翻譯隱藏起來。</span>
+  });
+}</code></pre>
+<p>當使用者點選某個「中英對照」字詞的時候，代表該使用者已經認識該字詞了，所以我們會將該字詞記錄在 knowWords 這個字典物件當中，並且隱藏該字詞的翻譯，如此當使用者認識的字越來越多，被翻譯的字詞也就會越來越少，於是隨著使用者的進步就可以逐漸完全讀懂整篇原文，而不需要依賴系統的翻譯功能了 (這也是本系統與一般翻譯系統最大的不同點，本系統是幫助學習英文，而不是企圖做出一個很厲害的機器翻譯系統)。</p>
+<div class="figure">
+<img src="../img/mt_back.jpg" alt="圖、將已經學會的單字點掉後，離開網頁再回來時的情況" /><p class="caption">圖、將已經學會的單字點掉後，離開網頁再回來時的情況</p>
+</div>
+<p>上述程式裡的幾個關鍵部分，我們已經用了中文註解進行說明，讀者應該很容易可以看出這幾個關鍵程式碼的功能才對！</p>
+<p>透過這種方式，我們可以讓網頁變成一種類似 APP 的應用，而且不需要伺服端的配合。</p>
+<p>(當然、如果加上伺服端之後，還可以將這些 localstorage 中的資訊傳回到伺服器永久記住，這樣即使換了一台電腦，也不會忘記這些資訊了)。</p>
+</div>
+<div id="footer">
+<a href="https://www.facebook.com/groups/programmerMagazine/">程式人雜誌</a> ，採用 <a href="http://creativecommons.org/licenses/by-sa/3.0/tw/ ">創作共用：姓名標示、相同方式分享</a> 授權，歡迎加入 <a href="https://www.facebook.com/groups/programmerMagazine/">雜誌社團</a>
+</div>
+</body>
+</html>

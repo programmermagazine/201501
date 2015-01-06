@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="elearn.css" rel="stylesheet">
+  <title>Login demo</title>
+</head>
+<body onload="load()">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="navbar"></nav>
+    <!-- 登入 -->
+    <div id="panelLogin" class="container panel">
+      <form class="form-signin" role="form" action="javascript:Account.login($('#loginUser').val(), $('#loginPassword').val())">
+        <input type="text" id="loginUser" class="form-control" required autofocus data-mt="User" placeholder=""/>
+        <input type="password" id="loginPassword" class="form-control" data-mt="Password" placeholder=""/>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"/><em data-mt="Remember me"></em>
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" data-mt="Login"></button>
+      </form>
+    </div> 
+
+    <!-- 登出 -->
+    <div id="panelLogout" class="container panel">
+      <form class="form-signin" role="form" action="javascript:Account.logout()">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" data-mt="Logout"></button>
+      </form>
+    </div> 
+    
+    <!-- 註冊 -->
+    <div id="panelSignup" class="container panel">
+      <form class="form-signin" role="form">
+        <label for="signupUser" class="sr-only" data-mt="User"></label>
+        <input type="text" id="signupUser" class="form-control" data-mt="User" placeholder="" required autofocus/>
+        <label for="signupEmail" class="sr-only" data-mt="Email"></label>
+        <input type="email" id="signupEmail" class="form-control"  data-mt="Email" placeholder=""/>
+        <label for="signupPassword" class="sr-only" data-mt="Password"></label>
+        <input type="password" id="signupPassword" class="form-control" data-mt="Password" placeholder=""/>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"/><em data-mt="Remember me"></em>
+          </label>
+        </div>
+        <button class="btn btn-primary" type="submit" data-mt="Sign up"></button>
+      </form>
+    </div> 
+<script>
+
+function load() {
+  Account.init();
+  opChange();
+  var op = window.location.hash;
+  Spa.switchPanel(op.substring(1));
+  $('#user').text(window.localStorage['user']);
+  $('#loginUser').val(window.localStorage['user']);
+}
+
+function opChange() {
+  var op = window.location.hash;
+  Spa.switchPanel(op.substring(1));
+}
+
+window.onhashchange = opChange;
+</script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="spa.js"></script>
+    <script src="navmenu.js"></script>
+</body>
+ </html>
+

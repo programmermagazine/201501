@@ -1,0 +1,133 @@
+<html>
+<head>
+<meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="elearn.css" rel="stylesheet">
+</head>
+<body onload="load()">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="navbar"></nav>
+    <div id="panelFill" class="container panel">
+      <div class="page-header"><h1><em data-mt="Start Testing"></em> : <em id="correct">0</em><em data-mt="correct"></em> , <em id="wrong">0</em><em data-mt="wrong"></em></h1></div>
+      <!--<span style="color:#336699" id="countMsg"></span>-->
+      <audio id="audio" src="http://tts-api.com/tts.mp3?q=mother."></audio>
+      <p class="lead">
+        <form name="formFill" action="javascript:pass()" class="lead">
+          <button class="btn btn-primary" type="button" data-mt="Submit" onclick="pass()"></button>
+          <button class="btn btn-primary" type="button" data-mt="Audio"  onclick="playAudio('audio'); answer.focus();" ></button>
+          <input id="answer" type="text" style="width:200px" onkeydown="keydown()"/> 
+          = <span id="question"></span>
+        </form>
+      </p>
+      <p data-mt="Hint ! Press enter to submit, slash / to play audio!"></p>
+      <p class="lead" style="color:red"><em id="msg" ></em><em id="correctAnswer"></em></p>
+    </div>
+<script>
+var correct=0, wrong=0,dict="", qa=[];
+
+function loadQA() {
+  dict = dict.trim().replace(/,[ ]*/g, "\n").replace(/\r\t/g, "");
+  qa = dict.split("\n");
+//  $("#countMsg").html("");
+  correct=0; wrong=0;
+}
+
+function switchDict(name) {
+  dict = dictMap[name];
+  save();
+}
+
+function save() {
+  loadQA();
+  test();
+}
+
+function rand(n) {
+  return Math.floor(Math.random()*n)
+}
+
+function selectQA() {
+  return qa[rand(qa.length)];
+}
+
+function A(s) {
+  return s.split("=")[0].trim();
+}
+
+function Q(s) {
+  var tokens = s.split("=");
+  if (tokens.length>1) return tokens[1].trim(); 
+  return "";
+}
+
+var answer, msg, audioTTS, formFill, isChecked = false
+
+function load() {
+  answer   = document.getElementById("answer");
+  audioTTS = document.getElementById("audio");
+  switchDict('小學三百字');
+  test();
+}
+
+function msg(m, q) {
+  $('#msg').html(m);
+  if (q === null)
+    $('#correctAnswer').html(""); 
+  else
+   $('#correctAnswer').html(A(q)+"="+Q(q)); 
+}
+
+function test() {
+  isChecked = false;
+  msg("", null);
+  q = selectQA();
+  answer.value = "";
+  $("#question").html(Q(q));
+  audioTTS.src = 'http://tts-api.com/tts.mp3?q='+A(q)+'.';
+}
+
+function check() {
+  var Qa = A(q).toLowerCase();
+  var ans = answer.value.toLowerCase().trim();
+  if (isChecked) return (ans === Qa);
+  isChecked = true;
+  if (ans === Qa) {
+//    msg("答對了！", q);
+    correct ++;
+  } else {
+    msg("答錯了, 請更正！", q);
+    wrong ++;
+  }
+  $("#correct").html(correct);
+  $("#wrong").html(wrong);
+  return (ans === Qa);
+}
+
+function pass() {
+  if (check()) {
+    passDelay = 0;
+    setTimeout(function () {  test(); }, passDelay);
+  }
+}
+
+function playAudio(name) {
+  document.getElementById(name).play();
+}
+
+function keydown() {
+  if (event.keyCode===191) { // 191 = slash / 
+    event.preventDefault();
+    playAudio('audio'); 
+  }
+  
+  if (event.keyCode===13) $("#formFill").submit();  // 13=enter
+}
+</script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="spa.js"></script>
+    <script src="dict.js"></script>
+    <script src="navmenu.js"></script>
+</body>
+</html>
+
